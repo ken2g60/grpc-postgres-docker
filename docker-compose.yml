@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      target: server
+    image: go-grpc-server
+    ports:
+      - "50051:50051"
+    networks:
+      - microservices_nginx_network
+
+  gateway:
+    build:
+      context: .
+      target: gateway
+    image: go-grpc-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
+    environment:
+      - GRPC_SERVER_ENDPOINT=server:50051
+  
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=plaid_user
+      - POSTGRES_PASSWORD=s3cr3t$password
+      - POSTGRES_DB=plaid_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - microservices_nginx_network
+
+networks:
+  microservices_nginx_network:
+    driver: bridge
+    external: true
+    name: microservices_nginx_network
+
+
+volumes:
+  postgres_data:
