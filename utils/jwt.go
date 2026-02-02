@@ -8,6 +8,12 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+type TransactionHistory struct {
+	UserId        string
+	Amount        float32
+	Description   string
+	PaymentMethod string
+}
 type JwtSessionPayload struct {
 	UserId   string `json:"user_id"`
 	Username string `json:"username"`
@@ -35,32 +41,17 @@ func ValidateToken(tokenString string) (JwtSessionPayload, error) {
 	return jwtPayload, err
 }
 
-func SignToken(userId string, username, role string) (string, error) {
-	jwtSecret := os.Getenv("JWT_SECRET")
-	jwtExpiresIn := os.Getenv("JWT_EXPIRES_IN")
+func SignToken(user_id string, email string) (string, error) {
 
-	claims := jwt.MapClaims{
-		"uid":  userId,
-		"user": username,
-		"role": role,
-	}
+	token_lifespan := time.Now().Add(time.Hour * 24).Unix()
 
-	if jwtExpiresIn != "" {
-		duration, err := time.ParseDuration(jwtExpiresIn)
-		if err != nil {
-			return "", ErrorHandler(err, "Internal error")
-		}
-		claims["exp"] = jwt.NewNumericDate(time.Now().Add(duration))
-	} else {
-		claims["exp"] = jwt.NewNumericDate(time.Now().Add(15 * time.Minute))
-	}
-
+	claims := jwt.MapClaims{}
+	claims["authorized"] = true
+	claims["user_id"] = user_id
+	claims["email"] = email
+	claims["exp"] = token_lifespan
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	signedToken, err := token.SignedString([]byte(jwtSecret))
-	if err != nil {
-		return "", ErrorHandler(err, "Internal error")
-	}
+	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 
-	return signedToken, nil
 }

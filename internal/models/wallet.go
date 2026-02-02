@@ -14,7 +14,7 @@ type Wallet struct {
 	UUID             string    `json:"uuid" gorm:"unique"`
 	UserID           string    `json:"user_id"`
 	Country          string    `json:"country"`
-	AvailableBalance float64   `json:"available_balance"`
+	AvailableBalance float32   `json:"available_balance"`
 	Status           string    `json:"status" gorm:"default:'active'"` // active, locked, unlocked, suspended
 	CreatedAt        time.Time `json:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at"`

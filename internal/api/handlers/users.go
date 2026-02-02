@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -66,7 +65,7 @@ func (s *Server) LoginUser(ctx context.Context, req *mainapi.LoginRequest) (*mai
 		return nil, status.Error(codes.Unauthenticated, "incorrect username/password")
 	}
 
-	tokenString, err := utils.SignToken(user.UUID, user.First_name, user.Last_name)
+	tokenString, err := utils.SignToken(user.UUID, user.Email)
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, "could not create token.")
 	}
@@ -90,14 +89,10 @@ func (s *Server) UserProfile(ctx context.Context, req *mainapi.UserIdRequest) (*
 		return nil, status.Error(codes.Unauthenticated, "Unauthorized Access")
 	}
 
-	fmt.Println(tokenString)
-
 	userInfo, err := utils.ValidateToken(tokenString)
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, "invalid or expired token: "+err.Error())
 	}
-
-	fmt.Println(userInfo)
 
 	user, err := models.FindUser(ctx, database.Db, userInfo.UserId)
 	if err != nil {
@@ -109,9 +104,35 @@ func (s *Server) UserProfile(ctx context.Context, req *mainapi.UserIdRequest) (*
 }
 
 func (s *Server) UpdateProfile(ctx context.Context, req *mainapi.UserID) (*mainapi.UserResponse, error) {
+
 	return &mainapi.UserResponse{}, nil
 }
 
 func (s *Server) DeactivateAccount(ctx context.Context, req *mainapi.UserID) (*mainapi.DeactivateResponse, error) {
-	return &mainapi.DeactivateResponse{}, nil
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, "no metadata found")
+	}
+
+	val, ok := md["authorization"]
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, "Unauthorized Access")
+	}
+
+	tokenString := strings.TrimPrefix(val[0], "Bearer ")
+	if tokenString == "" {
+		return nil, status.Error(codes.Unauthenticated, "Unauthorized Access")
+	}
+
+	userInfo, err := utils.ValidateToken(tokenString)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "invalid or expired token: "+err.Error())
+	}
+
+	user, err := models.DeactivateAccount(ctx, database.Db, userInfo.UserId)
+	if err != nil {
+		return nil, status.Error(codes.Aborted, "error deactivating account")
+	}
+
+	return &mainapi.DeactivateResponse{Status: user.Status}, nil
 }

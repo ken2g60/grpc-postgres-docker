@@ -18,6 +18,7 @@ type User struct {
 	Password    string    `json:"password"`
 	PhoneNumber string    `json:"phone_number"`
 	Email       string    `json:"email"`
+	Status      bool      `json:"status"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	CreatedAt   time.Time `json:"created_at"`
 }
@@ -66,5 +67,15 @@ func FindUserById(ctx context.Context, db *gorm.DB, user_id string) (*User, erro
 	if err != nil {
 		return nil, nil
 	}
+	return &user, nil
+}
+
+func DeactivateAccount(ctx context.Context, db *gorm.DB, user_id string) (*User, error) {
+	var user User
+	err := db.WithContext(ctx).Where("user_id = ?", user_id).Updates(&user).Error
+	if err != nil {
+		return &User{}, nil
+	}
+
 	return &user, nil
 }

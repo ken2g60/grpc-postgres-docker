@@ -25,6 +25,7 @@ func main() {
 			&models.User{},
 			&models.Wallet{},
 			&models.WalletHistory{},
+			&models.Transaction{},
 		},
 	}
 	database.RunMigrations(migrations)

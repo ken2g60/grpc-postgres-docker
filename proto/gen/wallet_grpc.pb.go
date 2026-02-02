@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	WalletService_Balance_FullMethodName   = "/main.WalletService/Balance"
-	WalletService_Deposit_FullMethodName   = "/main.WalletService/Deposit"
-	WalletService_Withdrawl_FullMethodName = "/main.WalletService/Withdrawl"
+	WalletService_Balance_FullMethodName            = "/main.WalletService/Balance"
+	WalletService_Deposit_FullMethodName            = "/main.WalletService/Deposit"
+	WalletService_Withdrawl_FullMethodName          = "/main.WalletService/Withdrawl"
+	WalletService_TransactionHistory_FullMethodName = "/main.WalletService/TransactionHistory"
 )
 
 // WalletServiceClient is the client API for WalletService service.
@@ -31,6 +32,7 @@ type WalletServiceClient interface {
 	Balance(ctx context.Context, in *WalletIdRequest, opts ...grpc.CallOption) (*WalletResponse, error)
 	Deposit(ctx context.Context, in *DepositRequest, opts ...grpc.CallOption) (*DepositResponse, error)
 	Withdrawl(ctx context.Context, in *WithdrawlRequest, opts ...grpc.CallOption) (*WithdrawlResponse, error)
+	TransactionHistory(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionHistoryResponse, error)
 }
 
 type walletServiceClient struct {
@@ -71,6 +73,16 @@ func (c *walletServiceClient) Withdrawl(ctx context.Context, in *WithdrawlReques
 	return out, nil
 }
 
+func (c *walletServiceClient) TransactionHistory(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionHistoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TransactionHistoryResponse)
+	err := c.cc.Invoke(ctx, WalletService_TransactionHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // WalletServiceServer is the server API for WalletService service.
 // All implementations must embed UnimplementedWalletServiceServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type WalletServiceServer interface {
 	Balance(context.Context, *WalletIdRequest) (*WalletResponse, error)
 	Deposit(context.Context, *DepositRequest) (*DepositResponse, error)
 	Withdrawl(context.Context, *WithdrawlRequest) (*WithdrawlResponse, error)
+	TransactionHistory(context.Context, *TransactionRequest) (*TransactionHistoryResponse, error)
 	mustEmbedUnimplementedWalletServiceServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedWalletServiceServer) Deposit(context.Context, *DepositRequest
 }
 func (UnimplementedWalletServiceServer) Withdrawl(context.Context, *WithdrawlRequest) (*WithdrawlResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Withdrawl not implemented")
+}
+func (UnimplementedWalletServiceServer) TransactionHistory(context.Context, *TransactionRequest) (*TransactionHistoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransactionHistory not implemented")
 }
 func (UnimplementedWalletServiceServer) mustEmbedUnimplementedWalletServiceServer() {}
 func (UnimplementedWalletServiceServer) testEmbeddedByValue()                       {}
@@ -172,6 +188,24 @@ func _WalletService_Withdrawl_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _WalletService_TransactionHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransactionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WalletServiceServer).TransactionHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WalletService_TransactionHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WalletServiceServer).TransactionHistory(ctx, req.(*TransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // WalletService_ServiceDesc is the grpc.ServiceDesc for WalletService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var WalletService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Withdrawl",
 			Handler:    _WalletService_Withdrawl_Handler,
+		},
+		{
+			MethodName: "TransactionHistory",
+			Handler:    _WalletService_TransactionHistory_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
