@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -104,7 +105,7 @@ func (s *Server) UserProfile(ctx context.Context, req *mainapi.UserIdRequest) (*
 }
 
 func (s *Server) UpdateProfile(ctx context.Context, req *mainapi.UserID) (*mainapi.UserResponse, error) {
-
+	fmt.Println("implement the update function")
 	return &mainapi.UserResponse{}, nil
 }
 
