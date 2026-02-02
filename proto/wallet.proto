@@ -1,0 +1,41 @@
+syntax = "proto3"; 
+
+
+option go_package = "/proto/gen;mainapi";
+
+package main;
+
+
+service WalletService {
+    rpc Balance (WalletIdRequest) returns (WalletResponse);
+    rpc Deposit (DepositRequest) returns (DepositResponse);
+    rpc Withdrawl (WithdrawlRequest) returns (WithdrawlResponse);
+}
+
+message WalletIdRequest {}
+
+message WalletResponse {
+    float balance = 1;
+}
+
+message DepositRequest {
+    float amount = 1;
+    string payment_method = 2;
+    string description = 3;
+}
+
+message DepositResponse {
+    float amount = 1;
+    string description = 2;
+}
+
+message  WithdrawlRequest{
+    float amount = 1;
+    string description = 2;
+}
+
+message WithdrawlResponse {
+    float amount = 1;
+    float current_balance = 2;
+    string description = 3;
+}

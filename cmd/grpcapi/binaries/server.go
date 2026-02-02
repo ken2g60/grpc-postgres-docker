@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
 
 	"github.com/grpc_fintech/database"
 	"github.com/grpc_fintech/internal/api/handlers"
@@ -12,6 +11,7 @@ import (
 	mainapi "github.com/grpc_fintech/proto/gen"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -23,6 +23,8 @@ func main() {
 		DB: db,
 		Models: []interface{}{
 			&models.User{},
+			&models.Wallet{},
+			&models.WalletHistory{},
 		},
 	}
 	database.RunMigrations(migrations)
@@ -30,16 +32,14 @@ func main() {
 	s := grpc.NewServer()
 	mainapi.RegisterUserServiceServer(s, &handlers.Server{})
 
-	port := os.Getenv("SERVER_PORT")
-	if port == "" {
-		port = ":50021"
-	}
-	fmt.Println("gRPC Server is running on port", port)
-	lis, err := net.Listen("tcp", port)
+	fmt.Println("gRPC Server is running on port", ":50052")
+	lis, err := net.Listen("tcp", ":50052")
 	if err != nil {
 		log.Printf("Error listen to port %v", err)
 		return
 	}
+
+	reflection.Register(s)
 
 	// listen to configuration
 	err = s.Serve(lis)

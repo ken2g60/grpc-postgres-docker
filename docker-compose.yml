@@ -7,30 +7,27 @@ services:
       target: server
     image: go-grpc-server
     ports:
-      - "50051:50051"
+      - 50052:50052
+    environment:
+      - DB_USER=grpc_fintech
+      - DB_PASSWORD=s3cr3t$password
+      - DB_NAME=grpc_fintech_db
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - SERVER_PORT=50021
+      - JWT_SECRET=jwt_secret
     networks:
       - microservices_nginx_network
 
-  gateway:
-    build:
-      context: .
-      target: gateway
-    image: go-grpc-gateway
-    ports:
-      - "8080:8080"
-    depends_on:
-      - server
-    environment:
-      - GRPC_SERVER_ENDPOINT=server:50051
   
   postgres:
     image: postgres:14
     container_name: postgres
     restart: always
     environment:
-      - POSTGRES_USER=plaid_user
+      - POSTGRES_USER=grpc_fintech
       - POSTGRES_PASSWORD=s3cr3t$password
-      - POSTGRES_DB=plaid_local
+      - POSTGRES_DB=grpc_fintech_db
     ports:
       - "5432:5432"
     volumes:

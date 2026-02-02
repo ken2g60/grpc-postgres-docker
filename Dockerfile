@@ -1,22 +1,17 @@
 # Build Stage
-FROM golang:1.21-alpine AS builder
+FROM golang:1.25-alpine AS builder
 
 WORKDIR /app
 
-# Copy go.mod and go.sum files
-COPY . ./
-
 # Download dependencies
+COPY go.mod go.sum ./
 RUN go mod download
 
 # Copy the source code
 COPY . .
 
 # Build the gRPC server
-RUN go build -o bin/server ./cmd/grpcapi/binaries/serve.go
-
-# Build the gRPC-Gateway
-RUN go build -o bin/gateway ./cmd/grpcapi/binaries/serve.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/server ./cmd/grpcapi/binaries/server.go
 
 # Run Stage for gRPC Server
 FROM alpine:latest AS server
@@ -25,17 +20,6 @@ WORKDIR /app
 
 COPY --from=builder /app/bin/server .
 
-EXPOSE 50051
+EXPOSE 50052
 
 ENTRYPOINT ["./server"]
-
-# Run Stage for gRPC-Gateway
-FROM alpine:latest AS gateway
-
-WORKDIR /app
-
-COPY --from=builder /app/bin/gateway .
-
-EXPOSE 8080
-
-ENTRYPOINT ["./gateway"]

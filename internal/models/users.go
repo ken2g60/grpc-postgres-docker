@@ -32,6 +32,17 @@ func (user *User) BeforeSave(tx *gorm.DB) error {
 	return nil
 }
 
+func (user *User) AfterCreate(tx *gorm.DB) error {
+	wallet := Wallet{
+		UserID:           user.UUID,
+		AvailableBalance: 0,
+		Status:           "active",
+		CreatedAt:        time.Now(),
+	}
+	tx.Model(&Wallet{}).Create(wallet)
+	return nil
+}
+
 func CreateUser(ctx context.Context, db *gorm.DB, user *User) (err error) {
 	err = db.WithContext(ctx).Create(&user).Error
 	if err != nil {
@@ -43,6 +54,15 @@ func CreateUser(ctx context.Context, db *gorm.DB, user *User) (err error) {
 func FindUser(ctx context.Context, db *gorm.DB, email string) (*User, error) {
 	var user User
 	err := db.WithContext(ctx).Table("users").Where("email = ?", email).Find(&user).Error
+	if err != nil {
+		return nil, nil
+	}
+	return &user, nil
+}
+
+func FindUserById(ctx context.Context, db *gorm.DB, user_id string) (*User, error) {
+	var user User
+	err := db.WithContext(ctx).Table("users").Where("uuid = ?", user_id).Find(&user).Error
 	if err != nil {
 		return nil, nil
 	}

@@ -9,7 +9,18 @@ package main;
 service UserService {
     rpc CreateUser (CreateUserRequest) returns (UserResponse);
     rpc LoginUser (LoginRequest) returns (LoginResponse);
+    rpc UserProfile (UserIdRequest) returns (UserResponse);
+    rpc UpdateProfile(UserID) returns (UserResponse);
+    rpc DeactivateAccount(UserID) returns (DeactivateResponse);
 }
+message DeactivateResponse {
+    string message = 1;
+    bool status = 2;
+}
+message UserID {
+    string user_id = 1;
+}
+message UserIdRequest { }
 
 message CreateUserRequest {
     string first_name = 1;
