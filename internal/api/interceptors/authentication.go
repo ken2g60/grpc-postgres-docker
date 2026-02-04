@@ -22,10 +22,8 @@ func AuthenticationInterceptorctx(ctx context.Context, req interface{}, info *gr
 	// skips specific methods rpcs
 	log.Println(info.FullMethod)
 	skipsMethods := map[string]bool{
-		"/main.ExecsService/Login":          true,
-		"/main.ExecsService/ForgotPassword": true,
-		"/main.ExecsService/ResetPassword":  true,
-		"/main.ExecsService/Register":       true,
+		"/main.UserService/CreateUser": true,
+		"/main.UserService/LoginUser":  true,
 	}
 
 	if skipsMethods[info.FullMethod] {
@@ -44,12 +42,6 @@ func AuthenticationInterceptorctx(ctx context.Context, req interface{}, info *gr
 
 	tokenStr := strings.TrimPrefix(authHeader[0], "Bearer ")
 	tokenStr = strings.TrimSpace(tokenStr)
-
-	// // monitor token
-	// ok = utils.JwtStore.IsLoggedOut(tokenStr)
-	// if ok {
-	// 	return nil, status.Error(codes.Unauthenticated, "Unauthorized Access")
-	// }
 
 	jwtSecret := os.Getenv("JWT_SECRET")
 	parsedToken, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
@@ -73,18 +65,12 @@ func AuthenticationInterceptorctx(ctx context.Context, req interface{}, info *gr
 		return nil, status.Errorf(codes.Unauthenticated, "Unauthorized Access")
 	}
 
-	// role, ok := claims["role"].(string)
-	// if !ok {
-	// 	return nil, status.Errorf(codes.Unauthenticated, "Unauthorized Access")
-	// }
-
 	userId := claims["userId"].(string)
 	username := claims["user"].(string)
 	expiresAtF64 := claims["exp"].(float64)
 	expiresAtI64 := int64(expiresAtF64)
 	expiresAt := fmt.Sprintf("%v", expiresAtI64)
 
-	//newCtx := context.WithValue(ctx, ContextKey("role"), role)
 	newCtx := context.WithValue(ctx, ContextKey("userId"), userId)
 	newCtx = context.WithValue(newCtx, ContextKey("username"), username)
 	newCtx = context.WithValue(newCtx, ContextKey("expiresAt"), expiresAt)
