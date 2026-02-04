@@ -110,54 +110,6 @@ type Wallet struct {
 }
 ```
 
-WalletHistory Model
-Tracks every balance change for audit purposes.
-
-Transaction Model
-Records all wallet transactions (deposits/withdrawals).
-
-Authentication & Security
-JWT Implementation
-File: jwt.go
-
-Algorithm: HS256 (HMAC SHA-256)
-Lifespan: 24 hours
-Claims: user_id, email, authorized
-Secret: Read from JWT_SECRET environment variable
-Password Hashing
-File: password.go
-
-Algorithm: Argon2ID
-Parameters:
-Time cost: 1
-Memory: 64MB
-Parallelism: 4
-Hash length: 32 bytes
-Storage Format: base64(salt).base64(hash)
-Request Interceptors
-File: authentication.go
-
-Validates JWT tokens from authorization metadata header
-Skips auth for public methods: Login, Register, ForgotPassword, ResetPassword
-Adds user context to request
-File: response_time.go
-
-Measures RPC execution time
-Returns X-Response-Time header
-Database Configuration
-File: db.go
-
-Connection String Format
-Environment Variables
-Auto-Migration
-Automatically creates/updates tables for:
-
-users
-wallets
-wallet_histories
-transactions
-Deployment
-
 ```
 # Start services
 make up
@@ -171,33 +123,6 @@ make down
 # Check status
 make ps
 ```
-
-Docker Compose
-File: docker-compose.yml
-
-Services:
-
-gRPC Server: Port 50052
-PostgreSQL: Port 5432
-Build & Run
-Dockerfile
-File: Dockerfile
-
-Multi-stage build:
-
-Builder stage: Compiles Go binary
-Runtime stage: Alpine Linux for minimal image size
-API Usage Examples
-Create User
-Login
-Check Balance
-Deposit
-Error Handling
-File: error_handlers.go
-
-Global error logging and formatting:
-
-gRPC error codes used:
 
 Unauthenticated: Invalid/missing JWT
 
