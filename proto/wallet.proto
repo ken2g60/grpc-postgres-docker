@@ -1,6 +1,6 @@
 syntax = "proto3"; 
 
-
+import "validate/validate.proto";
 option go_package = "/proto/gen;mainapi";
 
 package main;
@@ -14,6 +14,12 @@ service WalletService {
 }
 
 message TransactionRequest {}
+
+enum PAYMENT_METHOD_TYPES {
+  CARD_PAYMENT = 0;
+  MOBILE_MONEY = 1;
+  BANK_TRANSFER = 2;
+}
 
 message TransactionRepeatedResponse {
     string user_id = 1;
@@ -33,9 +39,9 @@ message WalletResponse {
 }
 
 message DepositRequest {
-    float amount = 1;
-    string payment_method = 2;
-    string description = 3;
+    float amount = 1 [(validate.rules).float = {gte: 0}];
+    string payment_method = 2 [(validate.rules).enum = {defined_only: true}];
+    string description = 3 [(validate.rules).string = {min_len: 1, max_len: 255}];
 }
 
 message DepositResponse {
@@ -44,8 +50,8 @@ message DepositResponse {
 }
 
 message  WithdrawlRequest{
-    float amount = 1;
-    string description = 2;
+    float amount = 1 [(validate.rules).float = {gte: 0}];
+    string description = 2 [(validate.rules).string = {min_len: 1, max_len: 255}];
 }
 
 message WithdrawlResponse {
