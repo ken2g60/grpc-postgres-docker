@@ -70,6 +70,7 @@ func (s *Server) Deposit(ctx context.Context, req *mainapi.DepositRequest) (*mai
 		return nil, status.Error(codes.Aborted, "user id not found")
 	}
 
+	wallet.UserID = userInfo.UserId
 	wallet.AvailableBalance += req.Amount
 	wallet.UpdatedAt = time.Now()
 	if err := wallet.Save(database.Db); err != nil {
@@ -109,6 +110,7 @@ func (s *Server) Withdrawl(ctx context.Context, req *mainapi.WithdrawlRequest) (
 		return nil, status.Error(codes.Aborted, "wallet balance is less than requested amount")
 	}
 
+	wallet.UserID = userInfo.UserId
 	wallet.AvailableBalance -= req.Amount
 	wallet.UpdatedAt = time.Now()
 	if err := wallet.Save(database.Db); err != nil {
