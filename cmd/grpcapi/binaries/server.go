@@ -7,6 +7,7 @@ import (
 
 	"github.com/grpc_fintech/database"
 	"github.com/grpc_fintech/internal/api/handlers"
+	"github.com/grpc_fintech/internal/api/interceptors"
 	"github.com/grpc_fintech/internal/models"
 	mainapi "github.com/grpc_fintech/proto/gen"
 
@@ -30,7 +31,7 @@ func main() {
 	}
 	database.RunMigrations(migrations)
 
-	s := grpc.NewServer()
+	s := grpc.NewServer(grpc.ChainUnaryInterceptor(interceptors.ResponseTimeInterceptor))
 	mainapi.RegisterUserServiceServer(s, &handlers.Server{})
 	mainapi.RegisterWalletServiceServer(s, &handlers.Server{})
 
