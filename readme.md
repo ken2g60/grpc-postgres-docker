@@ -1,6 +1,7 @@
+![Static Badge](https://img.shields.io/badge/Under_Development-red)
+
 # gRPC Fintech Project Documentation
 
-![Status: In Progress](https://img.shields.io)
 Go that provides user authentication and wallet management services. The project uses Protocol Buffers for service definitions, PostgreSQL for data persistence, and Docker for containerization.
 
 Architecture
