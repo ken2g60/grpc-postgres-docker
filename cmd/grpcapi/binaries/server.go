@@ -32,6 +32,7 @@ func main() {
 
 	s := grpc.NewServer()
 	mainapi.RegisterUserServiceServer(s, &handlers.Server{})
+	mainapi.RegisterWalletServiceServer(s, &handlers.Server{})
 
 	fmt.Println("gRPC Server is running on port", ":50052")
 	lis, err := net.Listen("tcp", ":50052")
