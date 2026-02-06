@@ -34,6 +34,21 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - microservices_nginx_network
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
+      PGADMIN_DEFAULT_PASSWORD: strong-password
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    networks:
+      - microservices_nginx_network
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
 
 networks:
   microservices_nginx_network:
@@ -41,6 +56,6 @@ networks:
     external: true
     name: microservices_nginx_network
 
-
 volumes:
   postgres_data:
+  pgadmin-data:
