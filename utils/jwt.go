@@ -1,11 +1,16 @@
 package utils
 
 import (
+	"context"
 	"encoding/json"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 type TransactionHistory struct {
@@ -51,7 +56,24 @@ func SignToken(user_id string, email string) (string, error) {
 	claims["email"] = email
 	claims["exp"] = token_lifespan
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
 	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+}
 
+func GetUserIdFromToken(ctx context.Context) (string, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return "", status.Error(codes.Unauthenticated, "no metadata found")
+	}
+
+	val, ok := md["authorization"]
+	if !ok {
+		return "", status.Error(codes.Unauthenticated, "Unauthorized Access")
+	}
+
+	tokenString := strings.TrimPrefix(val[0], "Bearer ")
+	if tokenString == "" {
+		return "", status.Error(codes.Unauthenticated, "Unauthorized Access")
+	}
+
+	return tokenString, nil
 }

@@ -22,52 +22,52 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type PAYMENT_METHOD_TYPES int32
+type PaymentMethod int32
 
 const (
-	PAYMENT_METHOD_TYPES_CARD_PAYMENT  PAYMENT_METHOD_TYPES = 0
-	PAYMENT_METHOD_TYPES_MOBILE_MONEY  PAYMENT_METHOD_TYPES = 1
-	PAYMENT_METHOD_TYPES_BANK_TRANSFER PAYMENT_METHOD_TYPES = 2
+	PaymentMethod_CARD_PAYMENT  PaymentMethod = 0
+	PaymentMethod_MOBILE_MONEY  PaymentMethod = 1
+	PaymentMethod_BANK_TRANSFER PaymentMethod = 2
 )
 
-// Enum value maps for PAYMENT_METHOD_TYPES.
+// Enum value maps for PaymentMethod.
 var (
-	PAYMENT_METHOD_TYPES_name = map[int32]string{
+	PaymentMethod_name = map[int32]string{
 		0: "CARD_PAYMENT",
 		1: "MOBILE_MONEY",
 		2: "BANK_TRANSFER",
 	}
-	PAYMENT_METHOD_TYPES_value = map[string]int32{
+	PaymentMethod_value = map[string]int32{
 		"CARD_PAYMENT":  0,
 		"MOBILE_MONEY":  1,
 		"BANK_TRANSFER": 2,
 	}
 )
 
-func (x PAYMENT_METHOD_TYPES) Enum() *PAYMENT_METHOD_TYPES {
-	p := new(PAYMENT_METHOD_TYPES)
+func (x PaymentMethod) Enum() *PaymentMethod {
+	p := new(PaymentMethod)
 	*p = x
 	return p
 }
 
-func (x PAYMENT_METHOD_TYPES) String() string {
+func (x PaymentMethod) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (PAYMENT_METHOD_TYPES) Descriptor() protoreflect.EnumDescriptor {
+func (PaymentMethod) Descriptor() protoreflect.EnumDescriptor {
 	return file_wallet_proto_enumTypes[0].Descriptor()
 }
 
-func (PAYMENT_METHOD_TYPES) Type() protoreflect.EnumType {
+func (PaymentMethod) Type() protoreflect.EnumType {
 	return &file_wallet_proto_enumTypes[0]
 }
 
-func (x PAYMENT_METHOD_TYPES) Number() protoreflect.EnumNumber {
+func (x PaymentMethod) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use PAYMENT_METHOD_TYPES.Descriptor instead.
-func (PAYMENT_METHOD_TYPES) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use PaymentMethod.Descriptor instead.
+func (PaymentMethod) EnumDescriptor() ([]byte, []int) {
 	return file_wallet_proto_rawDescGZIP(), []int{0}
 }
 
@@ -302,7 +302,7 @@ func (x *WalletResponse) GetBalance() float32 {
 type DepositRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Amount        float32                `protobuf:"fixed32,1,opt,name=amount,proto3" json:"amount,omitempty"`
-	PaymentMethod string                 `protobuf:"bytes,2,opt,name=payment_method,json=paymentMethod,proto3" json:"payment_method,omitempty"`
+	PaymentMethod PaymentMethod          `protobuf:"varint,2,opt,name=payment_method,json=paymentMethod,proto3,enum=main.PaymentMethod" json:"payment_method,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -345,11 +345,11 @@ func (x *DepositRequest) GetAmount() float32 {
 	return 0
 }
 
-func (x *DepositRequest) GetPaymentMethod() string {
+func (x *DepositRequest) GetPaymentMethod() PaymentMethod {
 	if x != nil {
 		return x.PaymentMethod
 	}
-	return ""
+	return PaymentMethod_CARD_PAYMENT
 }
 
 func (x *DepositRequest) GetDescription() string {
@@ -538,12 +538,12 @@ const file_wallet_proto_rawDesc = "" +
 	"\tresponses\x18\x01 \x03(\v2!.main.TransactionRepeatedResponseR\tresponses\"\x11\n" +
 	"\x0fWalletIdRequest\"*\n" +
 	"\x0eWalletResponse\x12\x18\n" +
-	"\abalance\x18\x01 \x01(\x02R\abalance\"\x93\x01\n" +
+	"\abalance\x18\x01 \x01(\x02R\abalance\"\xa8\x01\n" +
 	"\x0eDepositRequest\x12\"\n" +
 	"\x06amount\x18\x01 \x01(\x02B\n" +
 	"\xfaB\a\n" +
-	"\x05-\x00\x00\x00\x00R\x06amount\x12/\n" +
-	"\x0epayment_method\x18\x02 \x01(\tB\b\xfaB\x05\x82\x01\x02\x10\x01R\rpaymentMethod\x12,\n" +
+	"\x05-\x00\x00\x00\x00R\x06amount\x12D\n" +
+	"\x0epayment_method\x18\x02 \x01(\x0e2\x13.main.PaymentMethodB\b\xfaB\x05\x82\x01\x02\x10\x01R\rpaymentMethod\x12,\n" +
 	"\vdescription\x18\x03 \x01(\tB\n" +
 	"\xfaB\ar\x05\x10\x01\x18\xff\x01R\vdescription\"K\n" +
 	"\x0fDepositResponse\x12\x16\n" +
@@ -558,8 +558,8 @@ const file_wallet_proto_rawDesc = "" +
 	"\x11WithdrawlResponse\x12\x16\n" +
 	"\x06amount\x18\x01 \x01(\x02R\x06amount\x12'\n" +
 	"\x0fcurrent_balance\x18\x02 \x01(\x02R\x0ecurrentBalance\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription*M\n" +
-	"\x14PAYMENT_METHOD_TYPES\x12\x10\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription*F\n" +
+	"\rPaymentMethod\x12\x10\n" +
 	"\fCARD_PAYMENT\x10\x00\x12\x10\n" +
 	"\fMOBILE_MONEY\x10\x01\x12\x11\n" +
 	"\rBANK_TRANSFER\x10\x022\x8f\x02\n" +
@@ -584,7 +584,7 @@ func file_wallet_proto_rawDescGZIP() []byte {
 var file_wallet_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_wallet_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_wallet_proto_goTypes = []any{
-	(PAYMENT_METHOD_TYPES)(0),           // 0: main.PAYMENT_METHOD_TYPES
+	(PaymentMethod)(0),                  // 0: main.PaymentMethod
 	(*TransactionRequest)(nil),          // 1: main.TransactionRequest
 	(*TransactionRepeatedResponse)(nil), // 2: main.TransactionRepeatedResponse
 	(*TransactionHistoryResponse)(nil),  // 3: main.TransactionHistoryResponse
@@ -597,19 +597,20 @@ var file_wallet_proto_goTypes = []any{
 }
 var file_wallet_proto_depIdxs = []int32{
 	2, // 0: main.TransactionHistoryResponse.responses:type_name -> main.TransactionRepeatedResponse
-	4, // 1: main.WalletService.Balance:input_type -> main.WalletIdRequest
-	6, // 2: main.WalletService.Deposit:input_type -> main.DepositRequest
-	8, // 3: main.WalletService.Withdrawl:input_type -> main.WithdrawlRequest
-	1, // 4: main.WalletService.TransactionHistory:input_type -> main.TransactionRequest
-	5, // 5: main.WalletService.Balance:output_type -> main.WalletResponse
-	7, // 6: main.WalletService.Deposit:output_type -> main.DepositResponse
-	9, // 7: main.WalletService.Withdrawl:output_type -> main.WithdrawlResponse
-	3, // 8: main.WalletService.TransactionHistory:output_type -> main.TransactionHistoryResponse
-	5, // [5:9] is the sub-list for method output_type
-	1, // [1:5] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // 1: main.DepositRequest.payment_method:type_name -> main.PaymentMethod
+	4, // 2: main.WalletService.Balance:input_type -> main.WalletIdRequest
+	6, // 3: main.WalletService.Deposit:input_type -> main.DepositRequest
+	8, // 4: main.WalletService.Withdrawl:input_type -> main.WithdrawlRequest
+	1, // 5: main.WalletService.TransactionHistory:input_type -> main.TransactionRequest
+	5, // 6: main.WalletService.Balance:output_type -> main.WalletResponse
+	7, // 7: main.WalletService.Deposit:output_type -> main.DepositResponse
+	9, // 8: main.WalletService.Withdrawl:output_type -> main.WithdrawlResponse
+	3, // 9: main.WalletService.TransactionHistory:output_type -> main.TransactionHistoryResponse
+	6, // [6:10] is the sub-list for method output_type
+	2, // [2:6] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_wallet_proto_init() }

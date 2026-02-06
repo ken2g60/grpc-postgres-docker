@@ -27,7 +27,7 @@ message CreateUserRequest {
     string last_name = 2 [(validate.rules).string = {min_len: 1, max_len: 50}];
     string phone_number = 3 [(validate.rules).string = {min_len: 10, max_len: 15}];
     string password = 4 [(validate.rules).string = {min_len: 8}];
-    string email = 5 [(validate.rules).string = {email: true}];
+    string email = 5 [(validate.rules).string = {email: true}, (validate.rules).string.pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"];
 }
 
 message UserResponse {

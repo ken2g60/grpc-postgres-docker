@@ -48,7 +48,6 @@ func GetWalletByUserID(ctx context.Context, db *gorm.DB, userID string) (*Wallet
 	return &wallet, nil
 }
 
-// Save updates the wallet in the database with version tracking
 func (wallet *Wallet) Save(db *gorm.DB) error {
 	if db == nil {
 		return errors.New("database connection is nil")
@@ -61,13 +60,11 @@ func (wallet *Wallet) Save(db *gorm.DB) error {
 	}
 
 	result := tx.UpdateColumns(wallet)
-	// logger.Debug("columns", zap.Any("columns", result))
 	if result.Error != nil {
 		tx.Rollback()
 		return result.Error
 	}
 
-	// Create transaction history
 	history := WalletHistory{
 		WalletID:  wallet.ID,
 		UserID:    wallet.UserID,

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/grpc_fintech/database"
@@ -12,11 +11,17 @@ import (
 	mainapi "github.com/grpc_fintech/proto/gen"
 	"github.com/grpc_fintech/utils"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
 func (s *Server) CreateUser(ctx context.Context, req *mainapi.CreateUserRequest) (*mainapi.UserResponse, error) {
+
+	// validate request
+	err := req.Validate()
+	if err != nil {
+		log.Printf("Validation failed: %v", err)
+		return nil, status.Errorf(codes.InvalidArgument, "Invalid request: %v", err)
+	}
 
 	// validate email
 	user, err := models.FindUser(ctx, database.Db, req.GetEmail())
@@ -52,6 +57,12 @@ func (s *Server) CreateUser(ctx context.Context, req *mainapi.CreateUserRequest)
 
 func (s *Server) LoginUser(ctx context.Context, req *mainapi.LoginRequest) (*mainapi.LoginResponse, error) {
 
+	err := req.Validate()
+	if err != nil {
+		log.Printf("Validation failed: %v", err)
+		return nil, status.Errorf(codes.InvalidArgument, "Invalid request: %v", err)
+	}
+
 	user, err := models.FindUser(ctx, database.Db, req.Email)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
@@ -75,21 +86,7 @@ func (s *Server) LoginUser(ctx context.Context, req *mainapi.LoginRequest) (*mai
 }
 
 func (s *Server) UserProfile(ctx context.Context, req *mainapi.UserIdRequest) (*mainapi.UserResponse, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "no metadata found")
-	}
-
-	val, ok := md["authorization"]
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "Unauthorized Access")
-	}
-
-	tokenString := strings.TrimPrefix(val[0], "Bearer ")
-	if tokenString == "" {
-		return nil, status.Error(codes.Unauthenticated, "Unauthorized Access")
-	}
-
+	tokenString, err := utils.GetUserIdFromToken(ctx)
 	userInfo, err := utils.ValidateToken(tokenString)
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, "invalid or expired token: "+err.Error())
@@ -110,21 +107,7 @@ func (s *Server) UpdateProfile(ctx context.Context, req *mainapi.UserID) (*maina
 }
 
 func (s *Server) DeactivateAccount(ctx context.Context, req *mainapi.UserID) (*mainapi.DeactivateResponse, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "no metadata found")
-	}
-
-	val, ok := md["authorization"]
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "Unauthorized Access")
-	}
-
-	tokenString := strings.TrimPrefix(val[0], "Bearer ")
-	if tokenString == "" {
-		return nil, status.Error(codes.Unauthenticated, "Unauthorized Access")
-	}
-
+	tokenString, err := utils.GetUserIdFromToken(ctx)
 	userInfo, err := utils.ValidateToken(tokenString)
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, "invalid or expired token: "+err.Error())

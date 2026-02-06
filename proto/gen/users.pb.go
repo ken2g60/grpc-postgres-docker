@@ -412,15 +412,15 @@ const file_users_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\bR\x06status\"!\n" +
 	"\x06UserID\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"\x0f\n" +
-	"\rUserIdRequest\"\xd7\x01\n" +
+	"\rUserIdRequest\"\x89\x02\n" +
 	"\x11CreateUserRequest\x12(\n" +
 	"\n" +
 	"first_name\x18\x01 \x01(\tB\t\xfaB\x06r\x04\x10\x01\x182R\tfirstName\x12&\n" +
 	"\tlast_name\x18\x02 \x01(\tB\t\xfaB\x06r\x04\x10\x01\x182R\blastName\x12,\n" +
 	"\fphone_number\x18\x03 \x01(\tB\t\xfaB\x06r\x04\x10\n" +
 	"\x18\x0fR\vphoneNumber\x12#\n" +
-	"\bpassword\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x10\bR\bpassword\x12\x1d\n" +
-	"\x05email\x18\x05 \x01(\tB\a\xfaB\x04r\x02`\x01R\x05email\"\x7f\n" +
+	"\bpassword\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x10\bR\bpassword\x12O\n" +
+	"\x05email\x18\x05 \x01(\tB9\xfaB6r420^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$`\x01R\x05email\"\x7f\n" +
 	"\fUserResponse\x12\x1d\n" +
 	"\n" +
 	"first_name\x18\x01 \x01(\tR\tfirstName\x12\x1b\n" +
