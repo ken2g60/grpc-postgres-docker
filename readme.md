@@ -1,4 +1,4 @@
-![gRPC Version](https://img.shields.io/badge/gRPC-fintech-internal-blue)
+![Static Badge](https://img.shields.io/badge/gRPC-fintech-internal-blue)
 
 # gRPC Fintech Project Documentation
 
