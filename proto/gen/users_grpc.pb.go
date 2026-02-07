@@ -33,8 +33,8 @@ type UserServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	LoginUser(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	UserProfile(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*UserResponse, error)
-	UpdateProfile(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*UserResponse, error)
-	DeactivateAccount(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*DeactivateResponse, error)
+	UpdateProfile(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	DeactivateAccount(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*DeactivateResponse, error)
 }
 
 type userServiceClient struct {
@@ -75,7 +75,7 @@ func (c *userServiceClient) UserProfile(ctx context.Context, in *UserIdRequest, 
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateProfile(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*UserResponse, error) {
+func (c *userServiceClient) UpdateProfile(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserResponse)
 	err := c.cc.Invoke(ctx, UserService_UpdateProfile_FullMethodName, in, out, cOpts...)
@@ -85,7 +85,7 @@ func (c *userServiceClient) UpdateProfile(ctx context.Context, in *UserID, opts 
 	return out, nil
 }
 
-func (c *userServiceClient) DeactivateAccount(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*DeactivateResponse, error) {
+func (c *userServiceClient) DeactivateAccount(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*DeactivateResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeactivateResponse)
 	err := c.cc.Invoke(ctx, UserService_DeactivateAccount_FullMethodName, in, out, cOpts...)
@@ -102,8 +102,8 @@ type UserServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*UserResponse, error)
 	LoginUser(context.Context, *LoginRequest) (*LoginResponse, error)
 	UserProfile(context.Context, *UserIdRequest) (*UserResponse, error)
-	UpdateProfile(context.Context, *UserID) (*UserResponse, error)
-	DeactivateAccount(context.Context, *UserID) (*DeactivateResponse, error)
+	UpdateProfile(context.Context, *UpdateUserRequest) (*UserResponse, error)
+	DeactivateAccount(context.Context, *UserIdRequest) (*DeactivateResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -123,10 +123,10 @@ func (UnimplementedUserServiceServer) LoginUser(context.Context, *LoginRequest) 
 func (UnimplementedUserServiceServer) UserProfile(context.Context, *UserIdRequest) (*UserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserProfile not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateProfile(context.Context, *UserID) (*UserResponse, error) {
+func (UnimplementedUserServiceServer) UpdateProfile(context.Context, *UpdateUserRequest) (*UserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProfile not implemented")
 }
-func (UnimplementedUserServiceServer) DeactivateAccount(context.Context, *UserID) (*DeactivateResponse, error) {
+func (UnimplementedUserServiceServer) DeactivateAccount(context.Context, *UserIdRequest) (*DeactivateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeactivateAccount not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
@@ -205,7 +205,7 @@ func _UserService_UserProfile_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _UserService_UpdateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserID)
+	in := new(UpdateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -217,13 +217,13 @@ func _UserService_UpdateProfile_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: UserService_UpdateProfile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UpdateProfile(ctx, req.(*UserID))
+		return srv.(UserServiceServer).UpdateProfile(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_DeactivateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserID)
+	in := new(UserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -235,7 +235,7 @@ func _UserService_DeactivateAccount_Handler(srv interface{}, ctx context.Context
 		FullMethod: UserService_DeactivateAccount_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).DeactivateAccount(ctx, req.(*UserID))
+		return srv.(UserServiceServer).DeactivateAccount(ctx, req.(*UserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

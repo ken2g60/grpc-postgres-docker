@@ -70,12 +70,25 @@ func FindUserById(ctx context.Context, db *gorm.DB, user_id string) (*User, erro
 	return &user, nil
 }
 
-func DeactivateAccount(ctx context.Context, db *gorm.DB, user_id string) (*User, error) {
-	var user User
-	err := db.WithContext(ctx).Where("user_id = ?", user_id).Updates(&user).Error
+func UpdateUserProfile(ctx context.Context, db *gorm.DB, user_id string, user *User) (err error) {
+	err = db.WithContext(ctx).Table("users").Where("uuid = ?", user_id).Updates(map[string]any{
+		"first_name":   user.First_name,
+		"last_name":    user.Last_name,
+		"phone_number": user.PhoneNumber,
+		"email":        user.Email,
+		"updated_at":   time.Now()}).Error
 	if err != nil {
-		return &User{}, nil
+		return err
 	}
+	return nil
+}
 
-	return &user, nil
+func DeactivateAccount(ctx context.Context, db *gorm.DB, user_id string) (err error) {
+	err = db.WithContext(ctx).Table("users").Where("uuid = ?", user_id).Updates(map[string]any{
+		"status":     false,
+		"updated_at": time.Now()}).Error
+	if err != nil {
+		return err
+	}
+	return err
 }

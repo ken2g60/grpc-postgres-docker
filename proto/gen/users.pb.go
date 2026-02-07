@@ -8,6 +8,7 @@ package mainapi
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -74,50 +75,6 @@ func (x *DeactivateResponse) GetStatus() bool {
 	return false
 }
 
-type UserID struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserID) Reset() {
-	*x = UserID{}
-	mi := &file_users_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserID) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserID) ProtoMessage() {}
-
-func (x *UserID) ProtoReflect() protoreflect.Message {
-	mi := &file_users_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserID.ProtoReflect.Descriptor instead.
-func (*UserID) Descriptor() ([]byte, []int) {
-	return file_users_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *UserID) GetUserId() string {
-	if x != nil {
-		return x.UserId
-	}
-	return ""
-}
-
 type UserIdRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -126,7 +83,7 @@ type UserIdRequest struct {
 
 func (x *UserIdRequest) Reset() {
 	*x = UserIdRequest{}
-	mi := &file_users_proto_msgTypes[2]
+	mi := &file_users_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -138,7 +95,7 @@ func (x *UserIdRequest) String() string {
 func (*UserIdRequest) ProtoMessage() {}
 
 func (x *UserIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_users_proto_msgTypes[2]
+	mi := &file_users_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -151,7 +108,7 @@ func (x *UserIdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserIdRequest.ProtoReflect.Descriptor instead.
 func (*UserIdRequest) Descriptor() ([]byte, []int) {
-	return file_users_proto_rawDescGZIP(), []int{2}
+	return file_users_proto_rawDescGZIP(), []int{1}
 }
 
 type CreateUserRequest struct {
@@ -167,7 +124,7 @@ type CreateUserRequest struct {
 
 func (x *CreateUserRequest) Reset() {
 	*x = CreateUserRequest{}
-	mi := &file_users_proto_msgTypes[3]
+	mi := &file_users_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -179,7 +136,7 @@ func (x *CreateUserRequest) String() string {
 func (*CreateUserRequest) ProtoMessage() {}
 
 func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_users_proto_msgTypes[3]
+	mi := &file_users_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -192,7 +149,7 @@ func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserRequest.ProtoReflect.Descriptor instead.
 func (*CreateUserRequest) Descriptor() ([]byte, []int) {
-	return file_users_proto_rawDescGZIP(), []int{3}
+	return file_users_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreateUserRequest) GetFirstName() string {
@@ -226,6 +183,66 @@ func (x *CreateUserRequest) GetPassword() string {
 func (x *CreateUserRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
+	}
+	return ""
+}
+
+type UpdateUserRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FirstName     string                 `protobuf:"bytes,1,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
+	LastName      string                 `protobuf:"bytes,2,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
+	PhoneNumber   string                 `protobuf:"bytes,3,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateUserRequest) Reset() {
+	*x = UpdateUserRequest{}
+	mi := &file_users_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateUserRequest) ProtoMessage() {}
+
+func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_users_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateUserRequest.ProtoReflect.Descriptor instead.
+func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
+	return file_users_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *UpdateUserRequest) GetFirstName() string {
+	if x != nil {
+		return x.FirstName
+	}
+	return ""
+}
+
+func (x *UpdateUserRequest) GetLastName() string {
+	if x != nil {
+		return x.LastName
+	}
+	return ""
+}
+
+func (x *UpdateUserRequest) GetPhoneNumber() string {
+	if x != nil {
+		return x.PhoneNumber
 	}
 	return ""
 }
@@ -406,12 +423,10 @@ var File_users_proto protoreflect.FileDescriptor
 
 const file_users_proto_rawDesc = "" +
 	"\n" +
-	"\vusers.proto\x12\x04main\x1a\x17validate/validate.proto\"F\n" +
+	"\vusers.proto\x12\x04main\x1a\x17validate/validate.proto\x1a\x1cgoogle/api/annotations.proto\"F\n" +
 	"\x12DeactivateResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\bR\x06status\"!\n" +
-	"\x06UserID\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"\x0f\n" +
+	"\x06status\x18\x02 \x01(\bR\x06status\"\x0f\n" +
 	"\rUserIdRequest\"\x89\x02\n" +
 	"\x11CreateUserRequest\x12(\n" +
 	"\n" +
@@ -420,7 +435,13 @@ const file_users_proto_rawDesc = "" +
 	"\fphone_number\x18\x03 \x01(\tB\t\xfaB\x06r\x04\x10\n" +
 	"\x18\x0fR\vphoneNumber\x12#\n" +
 	"\bpassword\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x10\bR\bpassword\x12O\n" +
-	"\x05email\x18\x05 \x01(\tB9\xfaB6r420^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$`\x01R\x05email\"\x7f\n" +
+	"\x05email\x18\x05 \x01(\tB9\xfaB6r420^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$`\x01R\x05email\"\x93\x01\n" +
+	"\x11UpdateUserRequest\x12(\n" +
+	"\n" +
+	"first_name\x18\x01 \x01(\tB\t\xfaB\x06r\x04\x10\x01\x182R\tfirstName\x12&\n" +
+	"\tlast_name\x18\x02 \x01(\tB\t\xfaB\x06r\x04\x10\x01\x182R\blastName\x12,\n" +
+	"\fphone_number\x18\x03 \x01(\tB\t\xfaB\x06r\x04\x10\n" +
+	"\x18\x0fR\vphoneNumber\"\x7f\n" +
 	"\fUserResponse\x12\x1d\n" +
 	"\n" +
 	"first_name\x18\x01 \x01(\tR\tfirstName\x12\x1b\n" +
@@ -433,14 +454,14 @@ const file_users_proto_rawDesc = "" +
 	"\bpassword\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\bR\bpassword\"=\n" +
 	"\rLoginResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\bR\x06status2\xa6\x02\n" +
-	"\vUserService\x129\n" +
+	"\x06status\x18\x02 \x01(\bR\x06status2\xe7\x02\n" +
+	"\vUserService\x12R\n" +
 	"\n" +
-	"CreateUser\x12\x17.main.CreateUserRequest\x1a\x12.main.UserResponse\x124\n" +
-	"\tLoginUser\x12\x12.main.LoginRequest\x1a\x13.main.LoginResponse\x126\n" +
-	"\vUserProfile\x12\x13.main.UserIdRequest\x1a\x12.main.UserResponse\x121\n" +
-	"\rUpdateProfile\x12\f.main.UserID\x1a\x12.main.UserResponse\x12;\n" +
-	"\x11DeactivateAccount\x12\f.main.UserID\x1a\x18.main.DeactivateResponseB\x14Z\x12/proto/gen;mainapib\x06proto3"
+	"CreateUser\x12\x17.main.CreateUserRequest\x1a\x12.main.UserResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/register\x12J\n" +
+	"\tLoginUser\x12\x12.main.LoginRequest\x1a\x13.main.LoginResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/login\x126\n" +
+	"\vUserProfile\x12\x13.main.UserIdRequest\x1a\x12.main.UserResponse\x12<\n" +
+	"\rUpdateProfile\x12\x17.main.UpdateUserRequest\x1a\x12.main.UserResponse\x12B\n" +
+	"\x11DeactivateAccount\x12\x13.main.UserIdRequest\x1a\x18.main.DeactivateResponseB\x14Z\x12/proto/gen;mainapib\x06proto3"
 
 var (
 	file_users_proto_rawDescOnce sync.Once
@@ -457,19 +478,19 @@ func file_users_proto_rawDescGZIP() []byte {
 var file_users_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_users_proto_goTypes = []any{
 	(*DeactivateResponse)(nil), // 0: main.DeactivateResponse
-	(*UserID)(nil),             // 1: main.UserID
-	(*UserIdRequest)(nil),      // 2: main.UserIdRequest
-	(*CreateUserRequest)(nil),  // 3: main.CreateUserRequest
+	(*UserIdRequest)(nil),      // 1: main.UserIdRequest
+	(*CreateUserRequest)(nil),  // 2: main.CreateUserRequest
+	(*UpdateUserRequest)(nil),  // 3: main.UpdateUserRequest
 	(*UserResponse)(nil),       // 4: main.UserResponse
 	(*LoginRequest)(nil),       // 5: main.LoginRequest
 	(*LoginResponse)(nil),      // 6: main.LoginResponse
 }
 var file_users_proto_depIdxs = []int32{
-	3, // 0: main.UserService.CreateUser:input_type -> main.CreateUserRequest
+	2, // 0: main.UserService.CreateUser:input_type -> main.CreateUserRequest
 	5, // 1: main.UserService.LoginUser:input_type -> main.LoginRequest
-	2, // 2: main.UserService.UserProfile:input_type -> main.UserIdRequest
-	1, // 3: main.UserService.UpdateProfile:input_type -> main.UserID
-	1, // 4: main.UserService.DeactivateAccount:input_type -> main.UserID
+	1, // 2: main.UserService.UserProfile:input_type -> main.UserIdRequest
+	3, // 3: main.UserService.UpdateProfile:input_type -> main.UpdateUserRequest
+	1, // 4: main.UserService.DeactivateAccount:input_type -> main.UserIdRequest
 	4, // 5: main.UserService.CreateUser:output_type -> main.UserResponse
 	6, // 6: main.UserService.LoginUser:output_type -> main.LoginResponse
 	4, // 7: main.UserService.UserProfile:output_type -> main.UserResponse

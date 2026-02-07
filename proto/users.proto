@@ -1,25 +1,35 @@
 syntax = "proto3"; 
 
 import "validate/validate.proto";
+import "google/api/annotations.proto";
 option go_package = "/proto/gen;mainapi";
 
 package main;
 
 
 service UserService {
-    rpc CreateUser (CreateUserRequest) returns (UserResponse);
-    rpc LoginUser (LoginRequest) returns (LoginResponse);
+    rpc CreateUser (CreateUserRequest) returns (UserResponse){
+        option (google.api.http) = {
+                post: "/v1/register"
+                body: "*"
+        };
+    };
+   
+    rpc LoginUser (LoginRequest) returns (LoginResponse){
+        option (google.api.http) = {
+                post: "/v1/login"
+                body: "*"
+        };
+    };
     rpc UserProfile (UserIdRequest) returns (UserResponse);
-    rpc UpdateProfile(UserID) returns (UserResponse);
-    rpc DeactivateAccount(UserID) returns (DeactivateResponse);
+    rpc UpdateProfile(UpdateUserRequest) returns (UserResponse);
+    rpc DeactivateAccount(UserIdRequest) returns (DeactivateResponse);
 }
 message DeactivateResponse {
     string message = 1;
     bool status = 2;
 }
-message UserID {
-    string user_id = 1;
-}
+
 message UserIdRequest { }
 
 message CreateUserRequest {
@@ -28,6 +38,13 @@ message CreateUserRequest {
     string phone_number = 3 [(validate.rules).string = {min_len: 10, max_len: 15}];
     string password = 4 [(validate.rules).string = {min_len: 8}];
     string email = 5 [(validate.rules).string = {email: true}, (validate.rules).string.pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"];
+}
+
+
+message UpdateUserRequest {
+    string first_name = 1 [(validate.rules).string = {min_len: 1, max_len: 50}];
+    string last_name = 2 [(validate.rules).string = {min_len: 1, max_len: 50}];
+    string phone_number = 3 [(validate.rules).string = {min_len: 10, max_len: 15}];
 }
 
 message UserResponse {

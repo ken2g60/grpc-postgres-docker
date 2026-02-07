@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -92,31 +91,56 @@ func (s *Server) UserProfile(ctx context.Context, req *mainapi.UserIdRequest) (*
 		return nil, status.Error(codes.Unauthenticated, "invalid or expired token: "+err.Error())
 	}
 
-	user, err := models.FindUser(ctx, database.Db, userInfo.UserId)
+	user, err := models.FindUserById(ctx, database.Db, userInfo.UserId)
 	if err != nil {
 		log.Println("error fetching email data")
 		return nil, status.Error(codes.Aborted, "error fetching data")
 	}
 
-	return &mainapi.UserResponse{FirstName: user.First_name, LastName: user.Last_name, Email: user.Email}, nil
+	return &mainapi.UserResponse{FirstName: user.First_name, LastName: user.Last_name, Email: user.Email, CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05")}, nil
 }
 
-func (s *Server) UpdateProfile(ctx context.Context, req *mainapi.UserID) (*mainapi.UserResponse, error) {
-	fmt.Println("implement the update function")
-	return &mainapi.UserResponse{}, nil
-}
-
-func (s *Server) DeactivateAccount(ctx context.Context, req *mainapi.UserID) (*mainapi.DeactivateResponse, error) {
+func (s *Server) UpdateProfile(ctx context.Context, req *mainapi.UpdateUserRequest) (*mainapi.UserResponse, error) {
 	tokenString, err := utils.GetUserIdFromToken(ctx)
 	userInfo, err := utils.ValidateToken(tokenString)
 	if err != nil {
 		return nil, status.Error(codes.Unauthenticated, "invalid or expired token: "+err.Error())
 	}
 
-	user, err := models.DeactivateAccount(ctx, database.Db, userInfo.UserId)
+	user := &models.User{
+		First_name:  req.FirstName,
+		Last_name:   req.LastName,
+		PhoneNumber: req.PhoneNumber,
+	}
+
+	err = models.UpdateUserProfile(ctx, database.Db, userInfo.UserId, user)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "error updating profile: "+err.Error())
+	}
+	return &mainapi.UserResponse{FirstName: user.First_name, LastName: user.Last_name, Email: user.Email, CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05")}, nil
+}
+
+func (s *Server) DeactivateAccount(ctx context.Context, req *mainapi.UserIdRequest) (*mainapi.DeactivateResponse, error) {
+	tokenString, err := utils.GetUserIdFromToken(ctx)
+	userInfo, err := utils.ValidateToken(tokenString)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "invalid or expired token: "+err.Error())
+	}
+
+	user, err := models.FindUserById(ctx, database.Db, userInfo.UserId)
+	if err != nil {
+		log.Println("error fetching email data")
+		return nil, status.Error(codes.Aborted, "error fetching data")
+	}
+
+	if user.Status == false {
+		return nil, status.Error(codes.Aborted, "account already deactivated")
+	}
+
+	err = models.DeactivateAccount(ctx, database.Db, userInfo.UserId)
 	if err != nil {
 		return nil, status.Error(codes.Aborted, "error deactivating account")
 	}
 
-	return &mainapi.DeactivateResponse{Status: user.Status}, nil
+	return &mainapi.DeactivateResponse{Message: "account deactivated successfully", Status: true}, nil
 }
