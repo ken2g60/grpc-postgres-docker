@@ -12,4 +12,4 @@ wget -P proto/google/api https://raw.githubusercontent.com/googleapis/googleapis
 curl -o annotations.proto https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/annotations.proto
 curl -o http.proto https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/http.proto
 
-protoc -I=proto --go_out=. --go-grpc_out=. --validate_out=lang=go:. proto/users.proto proto/wallet.proto
+protoc -I=proto --go_out=. --go-grpc_out=. --grpc-gateway_out=. --validate_out=lang=go:. proto/users.proto proto/wallet.proto
