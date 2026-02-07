@@ -1,5 +1,3 @@
-![Static Badge](https://img.shields.io/badge/gRPC-fintech-internal-blue)
-
 # gRPC Fintech Project Documentation
 
 Go that provides user authentication and wallet management services. The project uses Protocol Buffers for service definitions, PostgreSQL for data persistence, and Docker for containerization.
